@@ -38,7 +38,7 @@
         }
         catch(e) {}
         if (block.style.position != '') {
-            seppuku();
+            // seppuku();
         }
     }
 
@@ -74,8 +74,13 @@
             rebuild();
             return;
         }
-        
+        if (win.pageXOffset > scroll.top) {
+            rebuild();
+        }
         if (win.pageYOffset != scroll.top) {
+            if (win.pageXOffset > scroll.top) {
+                rebuild();
+            }
             updateScrollPos();
             recalcAllPos();
         }
@@ -84,6 +89,9 @@
     //fixes flickering
     function onWheel(event) {
         setTimeout(function() {
+            if (win.pageXOffset > scroll.top) {
+                rebuild();
+            }
             if (win.pageYOffset != scroll.top) {
                 scroll.top = win.pageYOffset;
                 recalcAllPos();
@@ -274,7 +282,7 @@
             },
             nodeOffset = getElementOffset(node),
             parentOffset = getElementOffset(parentNode),
-            
+
             parent = {
                 node: parentNode,
                 css: {
@@ -367,8 +375,10 @@
 
     function init() {
         if (initialized) return;
-
-        updateScrollPos();
+        
+        setTimeout(function() {
+            updateScrollPos();
+        });
         initAll();
 
         win.addEventListener('scroll', onScroll);
@@ -390,17 +400,19 @@
         if (!initialized) return;
 
         deinitAll();
-        
+
         for (var i = watchArray.length - 1; i >= 0; i--) {
             watchArray[i] = getElementParams(watchArray[i].node);
         }
-        
+
         initAll();
     }
 
     function pause() {
+
         win.removeEventListener('scroll', onScroll);
         win.removeEventListener('wheel', onWheel);
+
         win.removeEventListener('resize', rebuild);
         win.removeEventListener('orientationchange', rebuild);
         doc.removeEventListener(visibilityChangeEventName, handlePageVisibilityChange);
@@ -412,7 +424,7 @@
 
     function stop() {
         pause();
-        deinitAll(); 
+        deinitAll();
     }
 
     function kill() {
