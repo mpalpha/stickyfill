@@ -38,7 +38,7 @@
         }
         catch(e) {}
         if (block.style.position != '') {
-            seppuku();
+            // seppuku();
         }
     }
 
@@ -74,8 +74,13 @@
             rebuild();
             return;
         }
-        
+        if (win.pageXOffset > scroll.top) {
+            rebuild();
+        }
         if (win.pageYOffset != scroll.top) {
+            if (win.pageXOffset > scroll.top) {
+                rebuild();
+            }
             updateScrollPos();
             recalcAllPos();
         }
@@ -84,6 +89,9 @@
     //fixes flickering
     function onWheel(event) {
         setTimeout(function() {
+            if (win.pageXOffset > scroll.top) {
+                rebuild();
+            }
             if (win.pageYOffset != scroll.top) {
                 scroll.top = win.pageYOffset;
                 recalcAllPos();
@@ -274,7 +282,7 @@
             },
             nodeOffset = getElementOffset(node),
             parentOffset = getElementOffset(parentNode),
-            
+
             parent = {
                 node: parentNode,
                 css: {
@@ -390,11 +398,11 @@
         if (!initialized) return;
 
         deinitAll();
-        
+
         for (var i = watchArray.length - 1; i >= 0; i--) {
             watchArray[i] = getElementParams(watchArray[i].node);
         }
-        
+
         initAll();
     }
 
@@ -412,7 +420,7 @@
 
     function stop() {
         pause();
-        deinitAll(); 
+        deinitAll();
     }
 
     function kill() {
