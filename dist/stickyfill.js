@@ -375,10 +375,8 @@
 
     function init() {
         if (initialized) return;
-        
-        setTimeout(function() {
-            updateScrollPos();
-        });
+
+        updateScrollPos();
         initAll();
 
         win.addEventListener('scroll', onScroll);
@@ -409,10 +407,8 @@
     }
 
     function pause() {
-
         win.removeEventListener('scroll', onScroll);
         win.removeEventListener('wheel', onWheel);
-
         win.removeEventListener('resize', rebuild);
         win.removeEventListener('orientationchange', rebuild);
         doc.removeEventListener(visibilityChangeEventName, handlePageVisibilityChange);
